@@ -6,8 +6,8 @@ authors = ["Erich Gubler <erichdongubler@gmail.com>"]
 edition = "2018"
 readme = "README.md"
 repository = "https://github.com/erichdongubler/map1-rs"
-keywords = ["template", "new", "project"]
-categories = ["development-tools"]
+keywords = ["map", "map1", "BTreeMap"]
+categories = ["data-structures"]
 license = "MPL-2.0"
 
 [badges]
