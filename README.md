@@ -9,7 +9,7 @@
 [![last release date](https://img.shields.io/github/release-date/erichdongubler/map1-rs.svg)](https://github.com/erichdongubler/map1-rs/releases)
 [![repo activity](https://img.shields.io/github/commit-activity/m/erichdongubler/map1-rs.svg)](https://github.com/erichdongubler/map1-rs/pulse/monthly)
 [![contributors](https://img.shields.io/github/contributors/erichdongubler/map1-rs.svg)](https://github.com/erichdongubler/map1-rs/graphs/contributors)
-[![Build Status](https://secure.travis-ci.org/erichdongubler/map1-rs.svg?branch=master)](https://travis-ci.org/erichdongubler/map1-rs)
+[![Build Status](https://secure.travis-ci.org/erichdongubler/map1-rs.svg?branch=master)](https://travis-ci.com/erichdongubler/map1-rs)
 
 <!-- cargo-sync-readme start -->
 
