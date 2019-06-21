@@ -3,33 +3,25 @@
 //! that guarantees that it will never be empty.
 #![macro_use]
 
-use {
-    std::{
-        borrow::Borrow,
-        collections::btree_map::{
-            BTreeMap,
-            Entry as StdEntry,
-            Iter,
-            IterMut,
-            Keys,
-            Range,
-            RangeMut,
-            OccupiedEntry as StdOccupiedEntry,
-            VacantEntry as StdVacantEntry,
-            Values,
-            ValuesMut
-        },
-        convert::TryFrom,
-        error::Error,
-        fmt::{Debug, Display, Formatter, Result as FmtResult},
-        iter::FromIterator,
-        num::NonZeroUsize,
-        ops::{Index, RangeBounds},
+use std::{
+    borrow::Borrow,
+    collections::btree_map::{
+        BTreeMap, Entry as StdEntry, Iter, IterMut, Keys, OccupiedEntry as StdOccupiedEntry, Range,
+        RangeMut, VacantEntry as StdVacantEntry, Values, ValuesMut,
     },
+    convert::TryFrom,
+    error::Error,
+    fmt::{Debug, Display, Formatter, Result as FmtResult},
+    iter::FromIterator,
+    num::NonZeroUsize,
+    ops::{Index, RangeBounds},
 };
 
 #[cfg(feature = "serde")]
-use serde::{de::{Deserializer, Error as DeserializationError}, Deserialize, Serialize};
+use serde::{
+    de::{Deserializer, Error as DeserializationError},
+    Deserialize, Serialize,
+};
 
 /// A convenience macro for constructing `BTreeMap1`.
 #[macro_export]
@@ -49,7 +41,10 @@ macro_rules! btree_map_1 {
 /// that guarantees that it will never be empty.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(Serialize))]
-#[cfg_attr(feature = "serde", serde(bound(serialize = "K: std::cmp::Ord + serde::Serialize, V: serde::Serialize")))]
+#[cfg_attr(
+    feature = "serde",
+    serde(bound(serialize = "K: std::cmp::Ord + serde::Serialize, V: serde::Serialize"))
+)]
 pub struct BTreeMap1<K, V>(pub BTreeMap<K, V>);
 
 /// An error returned when an operation associated with `BTreeMap1` would result in it being empty.
@@ -108,7 +103,7 @@ impl<'a, K: 'a, V: 'a> IntoIterator for &'a BTreeMap1<K, V> {
     type IntoIter = <&'a BTreeMap<K, V> as IntoIterator>::IntoIter;
 
     fn into_iter(self) -> Self::IntoIter {
-        (&self.0).into_iter()
+        self.0.iter()
     }
 }
 
@@ -126,7 +121,7 @@ impl<'a, K: 'a, V: 'a> IntoIterator for &'a mut BTreeMap1<K, V> {
     type IntoIter = <&'a mut BTreeMap<K, V> as IntoIterator>::IntoIter;
 
     fn into_iter(self) -> Self::IntoIter {
-        (&mut self.0).into_iter()
+        self.0.iter_mut()
     }
 }
 
@@ -148,14 +143,12 @@ pub enum Entry<'a, K: 'a, V: 'a> {
 ///
 /// [`Entry`]: enum.Entry.html
 pub struct VacantEntry<'a, K: 'a, V: 'a> {
-    inner: StdVacantEntry<'a, K, V>
+    inner: StdVacantEntry<'a, K, V>,
 }
 
 impl<K: Debug + Ord, V> Debug for VacantEntry<'_, K, V> {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.debug_tuple("VacantEntry")
-         .field(self.key())
-         .finish()
+        f.debug_tuple("VacantEntry").field(self.key()).finish()
     }
 }
 
@@ -171,9 +164,9 @@ pub struct OccupiedEntry<'a, K: 'a, V: 'a> {
 impl<K: Debug + Ord, V: Debug> Debug for OccupiedEntry<'_, K, V> {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.debug_struct("OccupiedEntry")
-         .field("key", self.key())
-         .field("value", self.get())
-         .finish()
+            .field("key", self.key())
+            .field("value", self.get())
+            .finish()
     }
 }
 
@@ -217,8 +210,9 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// assert_eq!(map.get(&2), None);
     /// ```
     pub fn get<Q: ?Sized>(&self, key: &Q) -> Option<&V>
-        where K: Borrow<Q>,
-              Q: Ord
+    where
+        K: Borrow<Q>,
+        Q: Ord,
     {
         self.0.get(key)
     }
@@ -240,8 +234,9 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// assert_eq!(map.contains_key(&2), false);
     /// ```
     pub fn contains_key<Q: ?Sized>(&self, key: &Q) -> bool
-        where K: Borrow<Q>,
-              Q: Ord
+    where
+        K: Borrow<Q>,
+        Q: Ord,
     {
         self.0.contains_key(key)
     }
@@ -266,8 +261,9 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// ```
     // See `get` for implementation notes, this is basically a copy-paste with mut's added
     pub fn get_mut<Q: ?Sized>(&mut self, key: &Q) -> Option<&mut V>
-        where K: Borrow<Q>,
-              Q: Ord
+    where
+        K: Borrow<Q>,
+        Q: Ord,
     {
         self.0.get_mut(key)
     }
@@ -327,8 +323,9 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// `try_remove_entry` instead.
     /// ```
     pub fn try_remove<Q: ?Sized>(&mut self, key: &Q) -> Option<Result<V, BTreeEmptyError>>
-        where K: Borrow<Q>,
-              Q: Ord
+    where
+        K: Borrow<Q>,
+        Q: Ord,
     {
         let len = self.len().get();
         self.get(key).map(|_v| ()).map(|()| {
@@ -400,7 +397,10 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// assert_eq!(Some((&5, &"b")), map.range(4..).next());
     /// ```
     pub fn range<T: ?Sized, R>(&self, range: R) -> Range<'_, K, V>
-        where T: Ord, K: Borrow<T>, R: RangeBounds<T>
+    where
+        T: Ord,
+        K: Borrow<T>,
+        R: RangeBounds<T>,
     {
         self.0.range(range)
     }
@@ -435,7 +435,10 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// }
     /// ```
     pub fn range_mut<T: ?Sized, R>(&mut self, range: R) -> RangeMut<'_, K, V>
-        where T: Ord, K: Borrow<T>, R: RangeBounds<T>
+    where
+        T: Ord,
+        K: Borrow<T>,
+        R: RangeBounds<T>,
     {
         self.0.range_mut(range)
     }
@@ -462,7 +465,7 @@ impl<K: Ord, V> BTreeMap1<K, V> {
         let tree_len = self.len();
         match self.0.entry(key) {
             StdEntry::Vacant(inner) => Entry::Vacant(VacantEntry { inner }),
-            StdEntry::Occupied(inner) => Entry::Occupied(OccupiedEntry { tree_len, inner })
+            StdEntry::Occupied(inner) => Entry::Occupied(OccupiedEntry { tree_len, inner }),
         }
     }
 
@@ -498,7 +501,8 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// assert_eq!(b[&41], "e");
     /// ```
     pub fn split<Q: ?Sized + Ord>(mut self, key: &Q) -> (BTreeMap<K, V>, BTreeMap<K, V>)
-        where K: Borrow<Q>
+    where
+        K: Borrow<Q>,
     {
         let new = self.0.split_off(key);
         (self.0, new)
@@ -507,7 +511,8 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// Attempts to create a value from an iterator. Returns an error if the iterator yields no
     /// items.
     pub fn try_from_iter<I>(iter: I) -> Result<Self, BTreeEmptyError>
-        where I: Iterator<Item = (K, V)>,
+    where
+        I: Iterator<Item = (K, V)>,
     {
         Self::try_from(BTreeMap::from_iter(iter))
     }
@@ -529,8 +534,9 @@ impl<'a, K: Ord + Copy, V: Copy> Extend<(&'a K, &'a V)> for BTreeMap1<K, V> {
 }
 
 impl<K: Ord, Q: ?Sized, V> Index<&Q> for BTreeMap1<K, V>
-    where K: Borrow<Q>,
-          Q: Ord
+where
+    K: Borrow<Q>,
+    Q: Ord,
 {
     type Output = V;
 
@@ -545,6 +551,7 @@ impl<K: Ord, Q: ?Sized, V> Index<&Q> for BTreeMap1<K, V>
     }
 }
 
+#[allow(clippy::len_without_is_empty)]
 impl<K: Ord, V> BTreeMap1<K, V> {
     /// Gets an iterator over the entries of the map, sorted by key.
     ///
@@ -615,7 +622,7 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// let keys: Vec<_> = a.keys().cloned().collect();
     /// assert_eq!(keys, [1, 2]);
     /// ```
-    pub fn keys<'a>(&'a self) -> Keys<'a, K, V> {
+    pub fn keys(&self) -> Keys<'_, K, V> {
         self.0.keys()
     }
 
@@ -636,7 +643,7 @@ impl<K: Ord, V> BTreeMap1<K, V> {
     /// let values: Vec<&str> = a.values().cloned().collect();
     /// assert_eq!(values, ["hello", "goodbye"]);
     /// ```
-    pub fn values<'a>(&'a self) -> Values<'a, K, V> {
+    pub fn values(&self) -> Values<'_, K, V> {
         self.0.values()
     }
 
@@ -686,7 +693,6 @@ impl<K: Ord, V> BTreeMap1<K, V> {
         unsafe { NonZeroUsize::new_unchecked(self.0.len()) }
     }
 }
-
 
 impl<'a, K: Ord, V> Entry<'a, K, V> {
     /// Ensures a value is in the entry by inserting the default if empty, and returns
@@ -769,13 +775,14 @@ impl<'a, K: Ord, V> Entry<'a, K, V> {
     /// assert_eq!(map["poneyland"], 43);
     /// ```
     pub fn and_modify<F>(self, f: F) -> Self
-        where F: FnOnce(&mut V)
+    where
+        F: FnOnce(&mut V),
     {
         match self {
             Entry::Occupied(mut entry) => {
                 f(entry.get_mut());
                 Entry::Occupied(entry)
-            },
+            }
             Entry::Vacant(entry) => Entry::Vacant(entry),
         }
     }
@@ -803,7 +810,6 @@ impl<'a, K: Ord, V: Default> Entry<'a, K, V> {
             Entry::Vacant(entry) => entry.insert(Default::default()),
         }
     }
-
 }
 
 impl<'a, K: Ord, V> VacantEntry<'a, K, V> {
