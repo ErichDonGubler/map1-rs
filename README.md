@@ -2,8 +2,8 @@
 
 <!-- NOTE: You can also use a Crates.io version of this license badge: https://shields.io/category/license -->
 [![License](https://img.shields.io/github/license/erichdongubler/map1-rs.svg)](LICENSE.md)
-[![Crates.io](https://img.shields.io/crates/v/map1-rs.svg)](https://crates.io/crates/map1-rs)
-[![Docs.rs](https://docs.rs/map1-rs/badge.svg)](https://docs.rs/map1-rs)
+[![Crates.io](https://img.shields.io/crates/v/map1.svg)](https://crates.io/crates/map1)
+[![Docs.rs](https://docs.rs/map1/badge.svg)](https://docs.rs/map1)
 
 [![last release date](https://img.shields.io/github/release-date/erichdongubler/map1-rs.svg)](https://github.com/erichdongubler/map1-rs/releases)
 [![repo activity](https://img.shields.io/github/commit-activity/m/erichdongubler/map1-rs.svg)](https://github.com/erichdongubler/map1-rs/pulse/monthly)
