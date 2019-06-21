@@ -1,0 +1,24 @@
+[package]
+name = "map1"
+description = "@ErichDonGubler's fancy template for new Rust projects"
+version = "0.1.1"
+authors = ["Erich Gubler <erichdongubler@gmail.com>"]
+edition = "2018"
+readme = "README.md"
+repository = "https://github.com/erichdongubler/map1-rs"
+keywords = ["template", "new", "project"]
+categories = ["development-tools"]
+license = "MPL-2.0"
+
+[badges]
+is-it-maintained-issue-resolution = { repository = "https://github.com/erichdongubler/map1-rs" }
+is-it-maintained-open-issues = { repository = "https://github.com/erichdongubler/map1-rs" }
+maintenance = { status = "experimental" }
+travis-ci = { repository = "erichdongubler/map1-rs" }
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"], optional = true }
+
+[dev-dependencies]
+version-sync = "0.8.1"
+cargo-sync-readme = "0.2.0"
