@@ -1,7 +1,7 @@
 [package]
 name = "map1"
 description = "@ErichDonGubler's fancy template for new Rust projects"
-version = "0.1.2"
+version = "0.1.3-pre"
 authors = ["Erich Gubler <erichdongubler@gmail.com>"]
 edition = "2018"
 readme = "README.md"
