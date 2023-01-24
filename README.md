@@ -1,4 +1,4 @@
-# New Rust Project
+# `map1`: Map-like Rust data structures that require at least one element.
 
 <!-- NOTE: You can also use a Crates.io version of this license badge: https://shields.io/category/license -->
 [![License](https://img.shields.io/github/license/erichdongubler/map1-rs.svg)](LICENSE.md)
